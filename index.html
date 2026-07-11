@@ -3,62 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pirate Treasure Hunt</title>
+    <title>Pirate Treasure Island Quiz</title>
     <style>
-        /* --- Reset and Core Styles --- */
+        /* --- CSS STYLING --- */
+        :root {
+            --parchment: #f4eccf;
+            --dark-wood: #5c4033;
+            --ocean-blue: #2b65ec;
+            --gold: #ffd700;
+            --pirate-red: #8b0000;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Georgia', serif;
         }
 
         body {
-            font-family: 'Georgia', serif;
-            background-color: #2c1d11;
-            color: #f4ecd8;
-            min-height: 100vh;
+            background-color: var(--ocean-blue);
+            color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-x: hidden;
-            /* Simulated Treasure Map Background */
-            background-image: 
-                radial-gradient(circle, transparent 30%, rgba(0,0,0,0.5) 100%),
-                linear-gradient(to right, rgba(210,180,140,0.3), rgba(210,180,140,0.3)),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://w3.org" width="100" height="100" viewBox="0 0 100 100"><path d="M10 10 C 30 20, 40 40, 60 20 S 80 60, 90 80" stroke="%238B5A2B" stroke-width="1" fill="none" stroke-dasharray="5,5"/><text x="80" y="85" fill="%238B5A2B" font-size="12">X</text></svg>');
-            background-size: cover, cover, 200px 200px;
-            background-blend-mode: multiply;
+            min-height: 100vh;
+            padding: 20px;
         }
 
-        /* --- Game Container --- */
+        /* Responsive Main Container */
         .game-container {
             width: 100%;
-            max-width: 600px;
-            margin: 20px;
-            padding: 30px;
-            background-color: #f2e3c6;
-            color: #3e2723;
-            border: 12px solid #5d4037;
-            border-image: linear-gradient(to bottom right, #5d4037, #3e2723) 12;
-            border-radius: 4px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+            max-width: 800px;
+            background-color: var(--parchment);
+            border: 8px solid var(--dark-wood);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            padding: 25px;
             position: relative;
-            min-height: 500px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            overflow: hidden;
+            /* Simple CSS Treasure Map Background Effect */
+            background-image: radial-gradient(circle, transparent 60%, rgba(139,69,19,0.15)), 
+                              repeating-linear-gradient(rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 2px, transparent 2px, transparent 10px);
         }
 
-        /* --- Header and Stats --- */
+        /* Top Navigation Header */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px dashed #8d6e63;
+            border-bottom: 3px dashed var(--dark-wood);
             padding-bottom: 15px;
             margin-bottom: 20px;
         }
 
+        .nav-links button {
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--pirate-red);
+            cursor: pointer;
+            margin-left: 15px;
+            text-decoration: underline;
+        }
+
+        .nav-links button:hover {
+            color: var(--dark-wood);
+        }
+
+        /* Logo and Header Details */
         .logo-area {
             display: flex;
             align-items: center;
@@ -66,77 +80,40 @@
         }
 
         .pirate-logo {
-            width: 50px;
-            height: 50px;
-            background-color: #3e2723;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            font-size: 2.5rem;
         }
 
-        .game-title {
-            font-size: 1.4rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #3e2723;
+        h1 {
+            color: var(--pirate-red);
+            font-size: 1.8rem;
         }
 
-        .coin-display {
-            background-color: #ffd54f;
-            color: #5d4037;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: bold;
+        /* Stats Bar Widget */
+        .stats-bar {
             display: flex;
-            align-items: center;
-            gap: 8px;
-            border: 2px solid #ffb300;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        /* --- Navigation --- */
-        nav {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
+            justify-content: space-around;
+            background: rgba(92, 64, 51, 0.1);
+            padding: 10px;
+            border-radius: 8px;
             margin-bottom: 20px;
-        }
-
-        .nav-btn {
-            background: none;
-            border: none;
-            font-family: inherit;
-            font-size: 1rem;
             font-weight: bold;
-            color: #8d6e63;
-            cursor: pointer;
-            padding: 5px 10px;
-            transition: color 0.2s, border-bottom 0.2s;
-            border-bottom: 2px solid transparent;
+            font-size: 0.95rem;
         }
 
-        .nav-btn.active {
-            color: #e65100;
-            border-bottom: 2px solid #e65100;
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
-        /* --- Pages Content --- */
+        /* Screen Management */
         .page {
             display: none;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            flex-grow: 1;
-            justify-content: center;
             animation: fadeIn 0.4s ease-in-out forwards;
         }
 
         .page.active {
-            display: flex;
+            display: block;
         }
 
         @keyframes fadeIn {
@@ -144,145 +121,211 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        h2 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-            color: #d84315;
+        /* Centered Layout elements */
+        .center-content {
+            text-align: center;
+            padding: 20px 0;
         }
 
-        p {
-            line-height: 1.6;
-            margin-bottom: 20px;
-            max-width: 400px;
+        /* Interactive Map Progress Visualizer */
+        .map-visualization {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(139, 69, 19, 0.08);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px dashed var(--dark-wood);
+            position: relative;
         }
 
-        /* --- Buttons --- */
-        .primary-btn {
-            background-color: #d84315;
-            color: #ffffff;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.3rem;
-            font-family: inherit;
-            font-weight: bold;
-            text-transform: uppercase;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 6px 0 #bf360c, 0 10px 15px rgba(0,0,0,0.2);
-            transition: transform 0.1s, box-shadow 0.1s;
+        .map-visualization::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            border-top: 3px dotted var(--dark-wood);
+            z-index: 1;
         }
 
-        .primary-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #bf360c, 0 4px 6px rgba(0,0,0,0.2);
-        }
-
-        /* --- Game Board Simulation --- */
-        .game-board {
-            width: 100%;
-            height: 200px;
-            background-color: rgba(141, 110, 99, 0.2);
-            border: 2px dashed #8d6e63;
-            border-radius: 8px;
+        .island-node {
+            background: #fff;
+            border: 3px solid var(--dark-wood);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-style: italic;
-            color: #5d4037;
-            margin-top: 10px;
+            font-size: 1.3rem;
+            z-index: 2;
+            transition: all 0.3s ease;
         }
 
-        /* --- Responsive Design --- */
-        @media (max-width: 480px) {
-            .game-container {
-                padding: 15px;
-                margin: 10px;
-            }
+        .island-node.active {
+            background: var(--gold);
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
 
-            .game-title {
-                font-size: 1.1rem;
-            }
+        .island-node.completed {
+            background: #8fbc8f;
+        }
 
-            h2 {
-                font-size: 1.5rem;
-            }
+        /* Forms, Buttons, Inputs */
+        input[type="text"], select {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid var(--dark-wood);
+            border-radius: 5px;
+            font-size: 1rem;
+            background: #fff;
+        }
 
-            .primary-btn {
-                padding: 12px 30px;
-                font-size: 1.1rem;
-            }
+        .btn {
+            background-color: var(--pirate-red);
+            color: #fff;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: background 0.2s;
+            margin-top: 15px;
+        }
+
+        .btn:hover {
+            background-color: var(--dark-wood);
+        }
+
+        /* Quiz Styling */
+        .quiz-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid var(--dark-wood);
+            margin-top: 15px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        @media(min-width: 500px) {
+            .options-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        .option-btn {
+            background: var(--parchment);
+            border: 2px solid var(--dark-wood);
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: left;
+            transition: background 0.2s;
+        }
+
+        .option-btn:hover {
+            background: var(--gold);
+        }
+
+        /* Leaderboard and Certificate */
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: #fff;
+        }
+
+        .leaderboard-table th, .leaderboard-table td {
+            border: 1px solid var(--dark-wood);
+            padding: 10px;
+            text-align: left;
+        }
+
+        .leaderboard-table th {
+            background: var(--dark-wood);
+            color: #fff;
+        }
+
+        .certificate-box {
+            border: 10px double var(--dark-wood);
+            padding: 30px;
+            background: #fff;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .certificate-box h2 {
+            font-family: 'Times New Roman', serif;
+            color: var(--pirate-red);
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
 
     <div class="game-container">
-        <!-- Header Section -->
+        <!-- Global Header -->
         <header>
             <div class="logo-area">
-                <div class="pirate-logo">☠️</div>
-                <div class="game-title">Sea Quest</div>
-            </div>
-            <div class="coin-display">
-                <span>🪙</span> <span id="coin-count">150</span>
-            </div>
-        </header>
-
-        <!-- Navigation Menu -->
-        <nav>
-            <button class="nav-btn active" onclick="switchPage('home')">Home</button>
-            <button class="nav-btn" onclick="switchPage('about')">About</button>
-            <button class="nav-btn" onclick="switchPage('start')">Play</button>
-        </nav>
-
-        <!-- Main Content Area -->
-        <main>
-            <!-- Home Page -->
-            <div id="home-page" class="page active">
-                <h2>Welcome, Captain!</h2>
-                <p>Set sail across dangerous waters, track down ancient treasure maps, and claim your golden fortunes!</p>
-                <button class="primary-btn" onclick="switchPage('start')">Start Game</button>
-            </div>
-
-            <!-- About Page -->
-            <div id="about-page" class="page">
-                <h2>About the Quest</h2>
-                <p>This game was built for daring adventurers. Use your coins wisely to buy crew supplies, avoid sea monsters, and navigate directly to the hidden chest.</p>
-            </div>
-
-            <!-- Start Game Page -->
-            <div id="start-page" class="page">
-                <h2>The Voyage Begins</h2>
-                <p>Your ship is ready. Choose a path on your map below to search for the hidden gold chest.</p>
-                <div class="game-board">
-                    [ Interactive Map Loading... ]
+                <span class="pirate-logo">🏴‍☠️</span>
+                <div>
+                    <h1>Treasure Quest</h1>
                 </div>
             </div>
-        </main>
-    </div>
+            <nav class="nav-links">
+                <button onclick="showPage('home-page')">Home</button>
+                <button onclick="showPage('about-page')">About</button>
+            </nav>
+        </header>
 
-    <!-- JavaScript for Navigation -->
-    <script>
-        function switchPage(pageId) {
-            // Hide all pages
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
+        <!-- Live Game Stats Bar (Visible during gameplay) -->
+        <div id="game-stats" class="stats-bar" style="display: none;">
+            <div class="stat-item">👤 <span id="stat-name">Player</span></div>
+            <div class="stat-item">🪙 Coins: <span id="stat-coins">0</span></div>
+            <div class="stat-item">⭐ XP: <span id="stat-xp">0</span></div>
+            <div class="stat-item">🏅 Badges: <span id="stat-badges">0</span></div>
+        </div>
 
-            // Remove active style from all nav buttons
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+        <!-- 1. HOME PAGE (Registration & Onboarding) -->
+        <div id="home-page" class="page active">
+            <div class="center-content">
+                <h2>Welcome, Brave Explorer!</h2>
+                <p style="margin: 10px 0 20px 0;">Solve trivia across treacherous islands to find the ultimate Golden Chest.</p>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="display:block; font-weight:bold;">Enter Pirate Identity:</label>
+                    <input type="text" id="player-name-input" placeholder="e.g., Captain Redbeard">
+                </div>
 
-            // Show selected page
-            document.getElementById(`${pageId}-page`).classList.add('active');
+                <div style="margin-bottom: 15px;">
+                    <label style="display:block; font-weight:bold;">Choose Adventure Category:</label>
+                    <select id="game-category-input">
+                        <option value="Math">🔢 Math Reef</option>
+                        <option value="Science">🧪 Science Volcano</option>
+                        <option value="English">📖 English Bay</option>
+                        <option value="GK">🧭 General Knowledge Jungle</option>
+                    </select>
+                </div>
 
-            // Find matching nav button to highlight
-            const buttons = document.querySelectorAll('.nav-btn');
-            if (pageId === 'home') buttons[0].classList.add('active');
-            if (pageId === 'about') buttons[1].classList.add('active');
-            if (pageId === 'start') buttons[2].classList.add('active');
-        }
-    </script>
-</body>
-</html>
+                <button class="btn" onclick="startAdventure()">Set Sail! ⛵</button>
+            </div>
+        </div>
+
+        <!-- 2. ABOUT PAGE -->
+        <div id="about-page" class="page">
+            <h3>How the Game Works</h3>
+            <p style="margin-top:10px; line-height: 1.5;">
+                Welcome to <strong>Treasure Quest</strong>! Enter your name and pick your favorite subject to begin. 
+                You will travel across a sequence of 3 magical islands on your treasure map. 
