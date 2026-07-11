@@ -1,20 +1,26 @@
-// ==========================================
-// 🏴‍☠️ PIRATE TREASURE QUEST - GAME LOGIC
-// ==========================================
+/* ==========================================
+   🏴‍☠️ JAVASCRIPT LOGIC (THE MECHANICS)
+   ========================================== */
 
-// 1. GAME STATE TRACKER
-// This object remembers everything about the current player's journey.
+// 1. GAME STATE GLOBAL MEMORY
+// Saves scores inside your active browser tab so it won't freeze.
 let gameState = {
     playerName: "Explorer",
     category: "Math",
-    currentIsland: 1, // Progresses from 1 to 3, then 4 is the Treasure Chest
+    currentIsland: 1, 
     coins: 0,
     xp: 0,
     badges: 0
 };
 
-// 2. THE TRIVIA TREASURE BANK
-// Contains custom pirate questions split into 4 separate educational categories.
+// 2. SESSION LEADERBOARD LIST
+// Pre-filled with competitor bots to make the leaderboard look active instantly!
+let liveLeaderboardMemory = [
+    { name: "Captain Blackbeard", category: "Math", coins: 60 },
+    { name: "Scurvy Sally", category: "Science", coins: 40 }
+];
+
+// 3. EDUCATIONAL QUESTION DATABASE BANK
 const questionBank = {
     Math: [
         { q: "What is 7 multiplied by 8?", a: ["54", "56", "64", "48"], correct: 1 },
@@ -38,16 +44,13 @@ const questionBank = {
     ]
 };
 
-// 3. SCREEN SWITCHER (NAVIGATION)
-// Hides all pages and only displays the active screen ID.
+// 4. SCREEN SWAPPING ROUTER
+// Hides all pages and only shows the page matching the pageId argument.
 function showPage(pageId) {
-    // Hide every screen element
     document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-    
-    // Turn on the requested screen element
     document.getElementById(pageId).classList.add('active');
     
-    // Show the top scoreboard HUD only during live quiz gameplay or victory screens
+    // Show the live score dashboard bar only during active quiz gameplay or victory screens
     if (pageId === 'gameplay-page' || pageId === 'victory-page') {
         document.getElementById('game-stats').style.display = 'flex';
     } else {
@@ -55,18 +58,14 @@ function showPage(pageId) {
     }
 }
 
-// 4. SET SAIL (START GAME BUTTON ACTION)
-// Grabs data from the home screen form, validates it, and sets up your journey.
+// 5. ACTION TRIGGERED ON "SET SAIL!" BUTTON CLICK
 function startAdventure() {
     const nameInput = document.getElementById('player-name-input').value.trim();
-    
-    // Error handling if input box is empty
     if (!nameInput) {
         alert("Arrgh! State your pirate name before setting sail!");
         return;
     }
     
-    // Initialize/Reset game variables
     gameState.playerName = nameInput;
     gameState.category = document.getElementById('game-category-input').value;
     gameState.currentIsland = 1;
@@ -74,17 +73,13 @@ function startAdventure() {
     gameState.xp = 0;
     gameState.badges = 0;
 
-    // Refresh display visual modules
     updateStatsDisplay();
     renderMapIslands();
     loadQuestion();
-    
-    // Instantly transition to map screen
     showPage('gameplay-page');
 }
 
-// 5. UPDATE SCOREBOARD HUD
-// Syncs JavaScript values over to your visual HTML elements.
+// 6. SYNCHRONIZE STATS TO THE HUD DISPLAY BAR
 function updateStatsDisplay() {
     document.getElementById('stat-name').innerText = gameState.playerName;
     document.getElementById('stat-coins').innerText = gameState.coins;
@@ -92,21 +87,17 @@ function updateStatsDisplay() {
     document.getElementById('stat-badges').innerText = gameState.badges;
 }
 
-// 6. DRAW THE ISLAND PROGRESS MAP
-// Updates colors and highlights islands to show how close the player is to the gold.
+// 7. RENDER VISUAL PROGRESS ISLAND TRAIL NODES
 function renderMapIslands() {
     for (let i = 1; i <= 3; i++) {
         const node = document.getElementById(`island-node-${i}`);
-        node.className = "island-node"; // reset classes
-        
+        node.className = "island-node";
         if (i < gameState.currentIsland) {
-            node.classList.add('completed'); // turns green
+            node.classList.add('completed'); // Turns green
         } else if (i === gameState.currentIsland) {
-            node.classList.add('active'); // glows gold
+            node.classList.add('active'); // Glows gold
         }
     }
-    
-    // Handle final chest marker highlight state
     const chestNode = document.getElementById('island-node-chest');
     chestNode.className = "island-node";
     if (gameState.currentIsland > 3) {
@@ -114,58 +105,49 @@ function renderMapIslands() {
     }
 }
 
-// 7. LOAD ISLAND QUESTIONS
-// Pulls the correct question from the question array based on your island number.
+// 8. GENERATE DYNAMIC QUIZ QUESTIONS AND ANSWER BUTTONS
 function loadQuestion() {
     document.getElementById('feedback-msg').innerText = "";
     const currentQuestions = questionBank[gameState.category];
     const activeIndex = gameState.currentIsland - 1;
 
-    // Safety fallback: if islands go out of bounds, finish game
     if (activeIndex >= currentQuestions.length) {
         handleVictoryTransition();
         return;
     }
 
-    // Set question headline text
     const currentData = currentQuestions[activeIndex];
     document.getElementById('question-title').innerText = `Island ${gameState.currentIsland} Trivia: ${currentData.q}`;
     
-    // Clear old choice buttons out of grid container
     const optionsContainer = document.getElementById('options-container');
     optionsContainer.innerHTML = "";
 
-    // Generate dynamic option buttons for each answer
     currentData.a.forEach((optionText, choiceIndex) => {
         const button = document.createElement('button');
         button.className = "option-btn";
         button.innerText = optionText;
-        // Pass button click details over to check correctness
         button.onclick = () => evaluationAnswer(choiceIndex, currentData.correct);
         optionsContainer.appendChild(button);
     });
 }
 
-// 8. EVALUATE USER ANSWER
-// Checks choices, gives loot rewards, or throws a text penalty!
+// 9. VALIDATE ANSWER AND MOVE THE PIRATE SHIP CLOSER
 function evaluationAnswer(selectedIdx, correctIdx) {
     const feedback = document.getElementById('feedback-msg');
     
     if (selectedIdx === correctIdx) {
-        // Boost points state
         gameState.coins += 20;
         gameState.xp += 50;
         gameState.badges += 1;
-        gameState.currentIsland += 1; // Move to next island node
+        gameState.currentIsland += 1;
         
         feedback.style.color = "green";
         feedback.innerText = "Splendid! Right answer. Sail onward!";
         
-        // Save score and map progress
         updateStatsDisplay();
         renderMapIslands();
 
-        // 1.2 Second delay so players see the success notification message
+        // Short timeout pause so player can read feedback before moving on
         setTimeout(() => {
             if (gameState.currentIsland > 3) {
                 handleVictoryTransition();
@@ -174,43 +156,34 @@ function evaluationAnswer(selectedIdx, correctIdx) {
             }
         }, 1200);
     } else {
-        // Mistake feedback loop
         feedback.style.color = "var(--pirate-red)";
         feedback.innerText = "Shiver me timbers! Incorrect choice. Try this island's challenge again.";
     }
 }
 
-// 9. VICTORY HANDLER & LEADERBOARD SAVE
-// Triggers local storage databases to record custom ranks and displays the certificate.
+// 10. VICTORY CERTIFICATE GENERATOR AND LEADERBOARD CONSTRUCTOR
 function handleVictoryTransition() {
     showPage('victory-page');
     
-    // Apply final details to custom certificate plaque
     document.getElementById('cert-name').innerText = gameState.playerName;
     document.getElementById('cert-category').innerText = gameState.category;
     document.getElementById('cert-coins').innerText = gameState.coins;
 
-    // Load old dashboard archive array from browser memory storage
-    let scoreboard = JSON.parse(localStorage.getItem('pirateLeaderboard')) || [];
-    
-    // Push new user card inside history pile
-    scoreboard.push({
+    // Push your data securely directly to standard active memory
+    liveLeaderboardMemory.push({
         name: gameState.playerName,
         category: gameState.category,
         coins: gameState.coins
     });
     
-    // Sort array elements from highest coins down to lowest coins
-    scoreboard.sort((x, y) => y.coins - x.coins);
-    
-    // Save updated scoreboard list back to your browser storage
-    localStorage.setItem('pirateLeaderboard', JSON.stringify(scoreboard));
+    // Sort scores from highest to lowest
+    liveLeaderboardMemory.sort((x, y) => y.coins - x.coins);
 
-    // Clear old table listings and build updated dynamic top 5 row records
     const boardBody = document.getElementById('leaderboard-body');
     boardBody.innerHTML = "";
     
-    const topScores = scoreboard.slice(0, 5); // Slice out top 5 items
+    // Take top 5 entries and put them in the HTML table structure
+    const topScores = liveLeaderboardMemory.slice(0, 5);
     topScores.forEach((row, i) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -223,8 +196,7 @@ function handleVictoryTransition() {
     });
 }
 
-// 10. RESTART THE VOYAGE LOOP
-// Clears input areas and sends your player back to the main homepage lobby.
+// 11. RETURN HOME BACK TO PORT
 function resetGame() {
     document.getElementById('player-name-input').value = "";
     showPage('home-page');
