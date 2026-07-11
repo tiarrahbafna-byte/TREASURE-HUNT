@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pirate Treasure Hunt</title>
+    <style>
+        /* --- Reset and Core Styles --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #2c1d11;
+            color: #f4ecd8;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            /* Simulated Treasure Map Background */
+            background-image: 
+                radial-gradient(circle, transparent 30%, rgba(0,0,0,0.5) 100%),
+                linear-gradient(to right, rgba(210,180,140,0.3), rgba(210,180,140,0.3)),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://w3.org" width="100" height="100" viewBox="0 0 100 100"><path d="M10 10 C 30 20, 40 40, 60 20 S 80 60, 90 80" stroke="%238B5A2B" stroke-width="1" fill="none" stroke-dasharray="5,5"/><text x="80" y="85" fill="%238B5A2B" font-size="12">X</text></svg>');
+            background-size: cover, cover, 200px 200px;
+            background-blend-mode: multiply;
+        }
+
+        /* --- Game Container --- */
+        .game-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px;
+            padding: 30px;
+            background-color: #f2e3c6;
+            color: #3e2723;
+            border: 12px solid #5d4037;
+            border-image: linear-gradient(to bottom right, #5d4037, #3e2723) 12;
+            border-radius: 4px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+            position: relative;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* --- Header and Stats --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px dashed #8d6e63;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pirate-logo {
+            width: 50px;
+            height: 50px;
+            background-color: #3e2723;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .game-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #3e2723;
+        }
+
+        .coin-display {
+            background-color: #ffd54f;
+            color: #5d4037;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 2px solid #ffb300;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* --- Navigation --- */
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #8d6e63;
+            cursor: pointer;
+            padding: 5px 10px;
+            transition: color 0.2s, border-bottom 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-btn.active {
+            color: #e65100;
+            border-bottom: 2px solid #e65100;
+        }
+
+        /* --- Pages Content --- */
+        .page {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            flex-grow: 1;
+            justify-content: center;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #d84315;
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
+
+        /* --- Buttons --- */
+        .primary-btn {
+            background-color: #d84315;
+            color: #ffffff;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            font-family: inherit;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #bf360c, 0 10px 15px rgba(0,0,0,0.2);
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .primary-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #bf360c, 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        /* --- Game Board Simulation --- */
+        .game-board {
+            width: 100%;
+            height: 200px;
+            background-color: rgba(141, 110, 99, 0.2);
+            border: 2px dashed #8d6e63;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-style: italic;
+            color: #5d4037;
+            margin-top: 10px;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 480px) {
+            .game-container {
+                padding: 15px;
+                margin: 10px;
+            }
+
+            .game-title {
+                font-size: 1.1rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .primary-btn {
+                padding: 12px 30px;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <!-- Header Section -->
+        <header>
+            <div class="logo-area">
+                <div class="pirate-logo">☠️</div>
+                <div class="game-title">Sea Quest</div>
+            </div>
+            <div class="coin-display">
+                <span>🪙</span> <span id="coin-count">150</span>
+            </div>
+        </header>
+
+        <!-- Navigation Menu -->
+        <nav>
+            <button class="nav-btn active" onclick="switchPage('home')">Home</button>
+            <button class="nav-btn" onclick="switchPage('about')">About</button>
+            <button class="nav-btn" onclick="switchPage('start')">Play</button>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main>
+            <!-- Home Page -->
+            <div id="home-page" class="page active">
+                <h2>Welcome, Captain!</h2>
+                <p>Set sail across dangerous waters, track down ancient treasure maps, and claim your golden fortunes!</p>
+                <button class="primary-btn" onclick="switchPage('start')">Start Game</button>
+            </div>
+
+            <!-- About Page -->
+            <div id="about-page" class="page">
+                <h2>About the Quest</h2>
+                <p>This game was built for daring adventurers. Use your coins wisely to buy crew supplies, avoid sea monsters, and navigate directly to the hidden chest.</p>
+            </div>
+
+            <!-- Start Game Page -->
+            <div id="start-page" class="page">
+                <h2>The Voyage Begins</h2>
+                <p>Your ship is ready. Choose a path on your map below to search for the hidden gold chest.</p>
+                <div class="game-board">
+                    [ Interactive Map Loading... ]
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript for Navigation -->
+    <script>
+        function switchPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Remove active style from all nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected page
+            document.getElementById(`${pageId}-page`).classList.add('active');
+
+            // Find matching nav button to highlight
+            const buttons = document.querySelectorAll('.nav-btn');
+            if (pageId === 'home') buttons[0].classList.add('active');
+            if (pageId === 'about') buttons[1].classList.add('active');
+            if (pageId === 'start') buttons[2].classList.add('active');
+        }
+    </script>
+</body>
+</html>
