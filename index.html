@@ -6,7 +6,7 @@
     <title>Pirate Treasure Island Quiz</title>
     <style>
         /* ==========================================
-           🎨 ALL CSS STYLING (THE GAME DESIGN)
+           🎨 ALL CSS STYLING (THE DESIGN)
            ========================================== */
         :root {
             --parchment: #f4eccf;
@@ -44,7 +44,6 @@
             padding: 25px;
             position: relative;
             overflow: hidden;
-            /* Weathered Old Map Paper Effect */
             background-image: radial-gradient(circle, transparent 60%, rgba(139,69,19,0.15)), 
                               repeating-linear-gradient(rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 2px, transparent 2px, transparent 10px);
         }
@@ -140,7 +139,6 @@
             position: relative;
         }
 
-        /* Dotted trail connecting the islands */
         .map-visualization::before {
             content: '';
             position: absolute;
@@ -323,6 +321,7 @@
                     </select>
                 </div>
 
+                <!-- FIXED: Calls startAdventure() exactly as written in script -->
                 <button class="btn" onclick="startAdventure()">Set Sail! ⛵</button>
             </div>
         </div>
