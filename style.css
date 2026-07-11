@@ -1,4 +1,6 @@
-/* --- PIRATE QUIZ GAME STYLES --- */
+/* ==========================================
+   🎨 PIRATE TREASURE QUEST - DESIGN STYLES
+   ========================================== */
 
 /* 1. COLOR VARIABLES & GLOBAL SETTINGS */
 :root {
@@ -26,7 +28,7 @@ body {
     padding: 20px;
 }
 
-/* 2. THE GAME CONTAINER (TREASURE MAP EFFECT) */
+/* 2. THE GAME CONTAINER (OLD TREASURE MAP EFFECT) */
 .game-container {
     width: 100%;
     max-width: 800px;
@@ -37,7 +39,7 @@ body {
     padding: 25px;
     position: relative;
     overflow: hidden;
-    /* Creates a textured, weathered paper appearance */
+    /* Weathered Old Map Paper Effect */
     background-image: radial-gradient(circle, transparent 60%, rgba(139,69,19,0.15)), 
                       repeating-linear-gradient(rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 2px, transparent 2px, transparent 10px);
 }
@@ -82,7 +84,7 @@ h1 {
     color: var(--dark-wood);
 }
 
-/* 4. LIVE STATS DASHBOARD BAR */
+/* 4. LIVE STATS DASHBOARD BAR (HUD) */
 .stats-bar {
     display: flex;
     justify-content: space-around;
@@ -100,7 +102,7 @@ h1 {
     gap: 5px;
 }
 
-/* 5. PAGE DISPLAY MANAGEMENT & ANIMATION */
+/* 5. SCREEN VISIBILITY MANAGER & SMOOTH DRIFT ANIMATION */
 .page {
     display: none;
     animation: fadeIn 0.4s ease-in-out forwards;
@@ -120,7 +122,7 @@ h1 {
     padding: 20px 0;
 }
 
-/* 6. ISLAND TRAVEL MAP TRACKER */
+/* 6. ISLAND Progress trail MAP */
 .map-visualization {
     display: flex;
     justify-content: space-between;
@@ -133,7 +135,7 @@ h1 {
     position: relative;
 }
 
-/* The dotted line connecting the islands */
+/* Dotted trail line linking islands together */
 .map-visualization::before {
     content: '';
     position: absolute;
@@ -168,7 +170,7 @@ h1 {
     background: #8fbc8f;
 }
 
-/* 7. INPUTS, SELECTIONS, AND GENERAL BUTTONS */
+/* 7. SETUP FORMS, INPUTS, AND MAIN ACTION BUTTONS */
 input[type="text"], select {
     width: 100%;
     max-width: 300px;
@@ -198,7 +200,7 @@ input[type="text"], select {
     background-color: var(--dark-wood);
 }
 
-/* 8. QUIZ SECTION LAYOUT (RESPONSIVE GRID) */
+/* 8. QUIZ CHOICE BOX & RESPONSIVE GRID SYSTEM */
 .quiz-box {
     background: #fff;
     padding: 20px;
@@ -209,12 +211,12 @@ input[type="text"], select {
 
 .options-grid {
     display: grid;
-    grid-template-columns: 1fr; /* 1 Column on small mobile screens */
+    grid-template-columns: 1fr; /* Stacks vertically on small phone screens */
     gap: 10px;
     margin-top: 15px;
 }
 
-/* Media Query splits options into 2 columns on screens wider than 500px */
+/* Splits buttons into 2 side-by-side columns on bigger computer screens */
 @media(min-width: 500px) {
     .options-grid { 
         grid-template-columns: 1fr 1fr; 
@@ -230,13 +232,14 @@ input[type="text"], select {
     font-weight: bold;
     text-align: left;
     transition: background 0.2s;
+    width: 100%;
 }
 
 .option-btn:hover {
     background: var(--gold);
 }
 
-/* 9. LEADERBOARD TABLE & VICTORY CERTIFICATE */
+/* 9. LEADERBOARD TABLE & VICTORY CERTIFICATE PLAQUE */
 .leaderboard-table {
     width: 100%;
     border-collapse: collapse;
