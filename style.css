@@ -1,0 +1,270 @@
+/* --- PIRATE QUIZ GAME STYLES --- */
+
+/* 1. COLOR VARIABLES & GLOBAL SETTINGS */
+:root {
+    --parchment: #f4eccf;
+    --dark-wood: #5c4033;
+    --ocean-blue: #2b65ec;
+    --gold: #ffd700;
+    --pirate-red: #8b0000;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Georgia', serif;
+}
+
+body {
+    background-color: var(--ocean-blue);
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* 2. THE GAME CONTAINER (TREASURE MAP EFFECT) */
+.game-container {
+    width: 100%;
+    max-width: 800px;
+    background-color: var(--parchment);
+    border: 8px solid var(--dark-wood);
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    padding: 25px;
+    position: relative;
+    overflow: hidden;
+    /* Creates a textured, weathered paper appearance */
+    background-image: radial-gradient(circle, transparent 60%, rgba(139,69,19,0.15)), 
+                      repeating-linear-gradient(rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 2px, transparent 2px, transparent 10px);
+}
+
+/* 3. HEADER & NAVIGATION */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px dashed var(--dark-wood);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pirate-logo {
+    font-size: 2.5rem;
+}
+
+h1 {
+    color: var(--pirate-red);
+    font-size: 1.8rem;
+}
+
+.nav-links button {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--pirate-red);
+    cursor: pointer;
+    margin-left: 15px;
+    text-decoration: underline;
+}
+
+.nav-links button:hover {
+    color: var(--dark-wood);
+}
+
+/* 4. LIVE STATS DASHBOARD BAR */
+.stats-bar {
+    display: flex;
+    justify-content: space-around;
+    background: rgba(92, 64, 51, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* 5. PAGE DISPLAY MANAGEMENT & ANIMATION */
+.page {
+    display: none;
+    animation: fadeIn 0.4s ease-in-out forwards;
+}
+
+.page.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.center-content {
+    text-align: center;
+    padding: 20px 0;
+}
+
+/* 6. ISLAND TRAVEL MAP TRACKER */
+.map-visualization {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(139, 69, 19, 0.08);
+    padding: 15px;
+    border-radius: 10px;
+    margin: 15px 0;
+    border: 2px dashed var(--dark-wood);
+    position: relative;
+}
+
+/* The dotted line connecting the islands */
+.map-visualization::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    right: 10%;
+    border-top: 3px dotted var(--dark-wood);
+    z-index: 1;
+}
+
+.island-node {
+    background: #fff;
+    border: 3px solid var(--dark-wood);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3rem;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.island-node.active {
+    background: var(--gold);
+    transform: scale(1.2);
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.island-node.completed {
+    background: #8fbc8f;
+}
+
+/* 7. INPUTS, SELECTIONS, AND GENERAL BUTTONS */
+input[type="text"], select {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    margin: 10px 0;
+    border: 2px solid var(--dark-wood);
+    border-radius: 5px;
+    font-size: 1rem;
+    background: #fff;
+}
+
+.btn {
+    background-color: var(--pirate-red);
+    color: #fff;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transition: background 0.2s;
+    margin-top: 15px;
+}
+
+.btn:hover {
+    background-color: var(--dark-wood);
+}
+
+/* 8. QUIZ SECTION LAYOUT (RESPONSIVE GRID) */
+.quiz-box {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid var(--dark-wood);
+    margin-top: 15px;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* 1 Column on small mobile screens */
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* Media Query splits options into 2 columns on screens wider than 500px */
+@media(min-width: 500px) {
+    .options-grid { 
+        grid-template-columns: 1fr 1fr; 
+    }
+}
+
+.option-btn {
+    background: var(--parchment);
+    border: 2px solid var(--dark-wood);
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: left;
+    transition: background 0.2s;
+}
+
+.option-btn:hover {
+    background: var(--gold);
+}
+
+/* 9. LEADERBOARD TABLE & VICTORY CERTIFICATE */
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: #fff;
+}
+
+.leaderboard-table th, .leaderboard-table td {
+    border: 1px solid var(--dark-wood);
+    padding: 10px;
+    text-align: left;
+}
+
+.leaderboard-table th {
+    background: var(--dark-wood);
+    color: #fff;
+}
+
+.certificate-box {
+    border: 10px double var(--dark-wood);
+    padding: 30px;
+    background: #fff;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.certificate-box h2 {
+    font-family: 'Times New Roman', serif;
+    color: var(--pirate-red);
+    margin-bottom: 10px;
+}
