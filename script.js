@@ -3,7 +3,7 @@
    ========================================== */
 
 // 1. GAME STATE GLOBAL MEMORY
-// Saves scores inside your active browser tab so it won't freeze.
+
 let gameState = {
     playerName: "Explorer",
     category: "Math",
