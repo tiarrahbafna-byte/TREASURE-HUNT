@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pirate Treasure Island Quiz</title>
     <style>
-        /* --- CSS STYLING --- */
+        /* ==========================================
+           🎨 ALL CSS STYLING (THE GAME DESIGN)
+           ========================================== */
         :root {
             --parchment: #f4eccf;
             --dark-wood: #5c4033;
@@ -31,7 +33,7 @@
             padding: 20px;
         }
 
-        /* Responsive Main Container */
+        /* Responsive Treasure Map Main Box */
         .game-container {
             width: 100%;
             max-width: 800px;
@@ -42,12 +44,12 @@
             padding: 25px;
             position: relative;
             overflow: hidden;
-            /* Simple CSS Treasure Map Background Effect */
+            /* Weathered Old Map Paper Effect */
             background-image: radial-gradient(circle, transparent 60%, rgba(139,69,19,0.15)), 
                               repeating-linear-gradient(rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 2px, transparent 2px, transparent 10px);
         }
 
-        /* Top Navigation Header */
+        /* Top Bar Layout */
         header {
             display: flex;
             justify-content: space-between;
@@ -55,6 +57,21 @@
             border-bottom: 3px dashed var(--dark-wood);
             padding-bottom: 15px;
             margin-bottom: 20px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pirate-logo {
+            font-size: 2.5rem;
+        }
+
+        h1 {
+            color: var(--pirate-red);
+            font-size: 1.8rem;
         }
 
         .nav-links button {
@@ -72,23 +89,7 @@
             color: var(--dark-wood);
         }
 
-        /* Logo and Header Details */
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .pirate-logo {
-            font-size: 2.5rem;
-        }
-
-        h1 {
-            color: var(--pirate-red);
-            font-size: 1.8rem;
-        }
-
-        /* Stats Bar Widget */
+        /* Live Score Counter HUD */
         .stats-bar {
             display: flex;
             justify-content: space-around;
@@ -106,7 +107,7 @@
             gap: 5px;
         }
 
-        /* Screen Management */
+        /* Screen Visibility Manager */
         .page {
             display: none;
             animation: fadeIn 0.4s ease-in-out forwards;
@@ -121,13 +122,12 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Centered Layout elements */
         .center-content {
             text-align: center;
             padding: 20px 0;
         }
 
-        /* Interactive Map Progress Visualizer */
+        /* Island Progress Trail Map */
         .map-visualization {
             display: flex;
             justify-content: space-between;
@@ -140,6 +140,7 @@
             position: relative;
         }
 
+        /* Dotted trail connecting the islands */
         .map-visualization::before {
             content: '';
             position: absolute;
@@ -174,7 +175,7 @@
             background: #8fbc8f;
         }
 
-        /* Forms, Buttons, Inputs */
+        /* Setup Forms and Inputs */
         input[type="text"], select {
             width: 100%;
             max-width: 300px;
@@ -204,7 +205,7 @@
             background-color: var(--dark-wood);
         }
 
-        /* Quiz Styling */
+        /* Quiz Choice Grid System */
         .quiz-box {
             background: #fff;
             padding: 20px;
@@ -221,7 +222,9 @@
         }
 
         @media(min-width: 500px) {
-            .options-grid { grid-template-columns: 1fr 1fr; }
+            .options-grid { 
+                grid-template-columns: 1fr 1fr; 
+            }
         }
 
         .option-btn {
@@ -233,13 +236,14 @@
             font-weight: bold;
             text-align: left;
             transition: background 0.2s;
+            width: 100%;
         }
 
         .option-btn:hover {
             background: var(--gold);
         }
 
-        /* Leaderboard and Certificate */
+        /* Leaderboard and Certificate styling */
         .leaderboard-table {
             width: 100%;
             border-collapse: collapse;
@@ -276,7 +280,7 @@
 <body>
 
     <div class="game-container">
-        <!-- Global Header -->
+        <!-- Game Top Nav Header -->
         <header>
             <div class="logo-area">
                 <span class="pirate-logo">🏴‍☠️</span>
@@ -290,7 +294,7 @@
             </nav>
         </header>
 
-        <!-- Live Game Stats Bar (Visible during gameplay) -->
+        <!-- Dynamic Game Status Dashboard (HUD) -->
         <div id="game-stats" class="stats-bar" style="display: none;">
             <div class="stat-item">👤 <span id="stat-name">Player</span></div>
             <div class="stat-item">🪙 Coins: <span id="stat-coins">0</span></div>
@@ -298,19 +302,19 @@
             <div class="stat-item">🏅 Badges: <span id="stat-badges">0</span></div>
         </div>
 
-        <!-- 1. HOME PAGE (Registration & Onboarding) -->
+        <!-- PAGE 1: HOME PAGE -->
         <div id="home-page" class="page active">
             <div class="center-content">
                 <h2>Welcome, Brave Explorer!</h2>
-                <p style="margin: 10px 0 20px 0;">Solve trivia across treacherous islands to find the ultimate Golden Chest.</p>
+                <p style="margin: 10px 0 20px 0;">Solve trivia across treacherous islands to claim the Golden Chest.</p>
                 
                 <div style="margin-bottom: 15px;">
-                    <label style="display:block; font-weight:bold;">Enter Pirate Identity:</label>
+                    <label style="display:block; font-weight:bold; margin-bottom: 5px;">Enter Pirate Identity:</label>
                     <input type="text" id="player-name-input" placeholder="e.g., Captain Redbeard">
                 </div>
 
                 <div style="margin-bottom: 15px;">
-                    <label style="display:block; font-weight:bold;">Choose Adventure Category:</label>
+                    <label style="display:block; font-weight:bold; margin-bottom: 5px;">Choose Adventure Category:</label>
                     <select id="game-category-input">
                         <option value="Math">🔢 Math Reef</option>
                         <option value="Science">🧪 Science Volcano</option>
@@ -323,9 +327,7 @@
             </div>
         </div>
 
-        <!-- 2. ABOUT PAGE -->
+        <!-- PAGE 2: ABOUT PAGE -->
         <div id="about-page" class="page">
             <h3>How the Game Works</h3>
-            <p style="margin-top:10px; line-height: 1.5;">
-                Welcome to <strong>Treasure Quest</strong>! Enter your name and pick your favorite subject to begin. 
-                You will travel across a sequence of 3 magical islands on your treasure map. 
+            <p style="margin-top:10px; line-height: 1.5; font-size: 1rem;">
