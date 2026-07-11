@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pirate Treasure Island Quiz</title>
+    <title>Pirate Quest Quiz Game</title>
     <style>
-        /* ==========================================
-           🎨 ALL CSS STYLING (THE DESIGN)
-           ========================================== */
+        /* --- VISUAL STYLING --- */
         :root {
-            --parchment: #f4eccf;
-            --dark-wood: #5c4033;
-            --ocean-blue: #2b65ec;
-            --gold: #ffd700;
-            --pirate-red: #8b0000;
+            --parchment: #f5eed3;
+            --dark-wood: #513629;
+            --ocean-blue: #1c52bd;
+            --gold: #ffcc00;
+            --pirate-red: #990000;
         }
 
         * {
@@ -25,118 +23,73 @@
 
         body {
             background-color: var(--ocean-blue);
-            color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
         }
 
-        /* Responsive Treasure Map Main Box */
         .game-container {
             width: 100%;
-            max-width: 800px;
+            max-width: 750px;
             background-color: var(--parchment);
             border: 8px solid var(--dark-wood);
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            padding: 25px;
-            position: relative;
-            overflow: hidden;
-            background-image: radial-gradient(circle, transparent 60%, rgba(139,69,19,0.15)), 
-                              repeating-linear-gradient(rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 2px, transparent 2px, transparent 10px);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            background-image: radial-gradient(circle, transparent 50%, rgba(100,50,20,0.1));
         }
 
-        /* Top Bar Layout */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 3px dashed var(--dark-wood);
-            padding-bottom: 15px;
-            margin-bottom: 20px;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
         }
 
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .pirate-logo {
-            font-size: 2.5rem;
-        }
-
-        h1 {
-            color: var(--pirate-red);
-            font-size: 1.8rem;
-        }
+        h1 { color: var(--pirate-red); font-size: 1.6rem; }
 
         .nav-links button {
             background: none;
             border: none;
-            font-size: 1rem;
+            font-size: 0.9.rem;
             font-weight: bold;
             color: var(--pirate-red);
             cursor: pointer;
-            margin-left: 15px;
+            margin-left: 12px;
             text-decoration: underline;
         }
 
-        .nav-links button:hover {
-            color: var(--dark-wood);
-        }
-
-        /* Live Score Counter HUD */
         .stats-bar {
             display: flex;
             justify-content: space-around;
-            background: rgba(92, 64, 51, 0.1);
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            background: rgba(80, 50, 30, 0.15);
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 15px;
             font-weight: bold;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+        /* Screens Visibility Rules */
+        .page { display: none; }
+        .page.active { display: block; }
+        .center-content { text-align: center; padding: 15px 0; }
 
-        /* Screen Visibility Manager */
-        .page {
-            display: none;
-            animation: fadeIn 0.4s ease-in-out forwards;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .center-content {
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        /* Island Progress Trail Map */
+        /* Map UI */
         .map-visualization {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(139, 69, 19, 0.08);
-            padding: 15px;
-            border-radius: 10px;
+            padding: 12px;
+            border-radius: 8px;
             margin: 15px 0;
             border: 2px dashed var(--dark-wood);
             position: relative;
+            background: rgba(0,0,0,0.03);
         }
 
         .map-visualization::before {
@@ -151,168 +104,137 @@
 
         .island-node {
             background: #fff;
-            border: 3px solid var(--dark-wood);
+            border: 2px solid var(--dark-wood);
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.3rem;
+            font-weight: bold;
             z-index: 2;
-            transition: all 0.3s ease;
         }
 
-        .island-node.active {
-            background: var(--gold);
-            transform: scale(1.2);
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
-        }
+        .island-node.active { background: var(--gold); transform: scale(1.15); }
+        .island-node.completed { background: #7fbe7f; color: white; }
 
-        .island-node.completed {
-            background: #8fbc8f;
-        }
-
-        /* Setup Forms and Inputs */
+        /* Form elements */
         input[type="text"], select {
             width: 100%;
-            max-width: 300px;
+            max-width: 280px;
             padding: 10px;
-            margin: 10px 0;
+            margin: 8px 0;
             border: 2px solid var(--dark-wood);
-            border-radius: 5px;
+            border-radius: 4px;
             font-size: 1rem;
-            background: #fff;
         }
 
         .btn {
             background-color: var(--pirate-red);
             color: #fff;
-            padding: 12px 25px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            transition: background 0.2s;
-            margin-top: 15px;
+            box-shadow: 0 4px rgba(0,0,0,0.2);
+            margin-top: 10px;
         }
 
-        .btn:hover {
-            background-color: var(--dark-wood);
-        }
+        .btn:hover { background-color: var(--dark-wood); }
 
-        /* Quiz Choice Grid System */
+        /* Quiz Choices Layout */
         .quiz-box {
             background: #fff;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 15px;
+            border-radius: 6px;
             border: 2px solid var(--dark-wood);
-            margin-top: 15px;
+            margin-top: 10px;
         }
 
         .options-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 8px;
+            margin-top: 12px;
         }
 
-        @media(min-width: 500px) {
-            .options-grid { 
-                grid-template-columns: 1fr 1fr; 
-            }
-        }
+        @media(min-width: 480px) { .options-grid { grid-template-columns: 1fr 1fr; } }
 
         .option-btn {
-            background: var(--parchment);
+            background: #fbf9f0;
             border: 2px solid var(--dark-wood);
-            padding: 12px;
-            border-radius: 5px;
+            padding: 10px;
+            border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
             text-align: left;
-            transition: background 0.2s;
-            width: 100%;
         }
 
-        .option-btn:hover {
-            background: var(--gold);
-        }
+        .option-btn:hover { background: var(--gold); }
 
-        /* Leaderboard and Certificate styling */
+        /* Certificate and Tables */
         .leaderboard-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            margin-top: 12px;
             background: #fff;
         }
 
         .leaderboard-table th, .leaderboard-table td {
             border: 1px solid var(--dark-wood);
-            padding: 10px;
+            padding: 8px;
             text-align: left;
         }
 
-        .leaderboard-table th {
-            background: var(--dark-wood);
-            color: #fff;
-        }
+        .leaderboard-table th { background: var(--dark-wood); color: #fff; }
 
         .certificate-box {
-            border: 10px double var(--dark-wood);
-            padding: 30px;
+            border: 6px double var(--dark-wood);
+            padding: 20px;
             background: #fff;
-            margin: 20px 0;
+            margin: 15px 0;
             text-align: center;
-        }
-
-        .certificate-box h2 {
-            font-family: 'Times New Roman', serif;
-            color: var(--pirate-red);
-            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
 
     <div class="game-container">
-        <!-- Game Top Nav Header -->
+        <!-- Persistent Top Header -->
         <header>
             <div class="logo-area">
-                <span class="pirate-logo">🏴‍☠️</span>
-                <div>
-                    <h1>Treasure Quest</h1>
-                </div>
+                <span style="font-size: 2rem;">🏴‍☠️</span>
+                <h1>Treasure Quest</h1>
             </div>
             <nav class="nav-links">
-                <button onclick="showPage('home-page')">Home</button>
-                <button onclick="showPage('about-page')">About</button>
+                <button onclick="changeScreen('home-page')">Home</button>
+                <button onclick="changeScreen('about-page')">About</button>
             </nav>
         </header>
 
-        <!-- Dynamic Game Status Dashboard (HUD) -->
+        <!-- Live Scoreboard Hub -->
         <div id="game-stats" class="stats-bar" style="display: none;">
-            <div class="stat-item">👤 <span id="stat-name">Player</span></div>
-            <div class="stat-item">🪙 Coins: <span id="stat-coins">0</span></div>
-            <div class="stat-item">⭐ XP: <span id="stat-xp">0</span></div>
-            <div class="stat-item">🏅 Badges: <span id="stat-badges">0</span></div>
+            <div>👤 <span id="stat-name">Pirate</span></div>
+            <div>🪙 Coins: <span id="stat-coins">0</span></div>
+            <div>⭐ XP: <span id="stat-xp">0</span></div>
+            <div>🏅 Badges: <span id="stat-badges">0</span></div>
         </div>
 
-        <!-- PAGE 1: HOME PAGE -->
+        <!-- 1. START HOME SCREEN -->
         <div id="home-page" class="page active">
             <div class="center-content">
                 <h2>Welcome, Brave Explorer!</h2>
-                <p style="margin: 10px 0 20px 0;">Solve trivia across treacherous islands to claim the Golden Chest.</p>
+                <p style="margin: 8px 0 15px 0;">Solve trivia across treacherous islands to claim the Golden Chest.</p>
                 
-                <div style="margin-bottom: 15px;">
-                    <label style="display:block; font-weight:bold; margin-bottom: 5px;">Enter Pirate Identity:</label>
-                    <input type="text" id="player-name-input" placeholder="e.g., Captain Redbeard">
+                <div style="margin-bottom: 12px;">
+                    <label style="display:block; font-weight:bold;">Enter Pirate Identity:</label>
+                    <input type="text" id="player-name-input" value="Captain Redbeard">
                 </div>
 
-                <div style="margin-bottom: 15px;">
-                    <label style="display:block; font-weight:bold; margin-bottom: 5px;">Choose Adventure Category:</label>
+                <div style="margin-bottom: 12px;">
+                    <label style="display:block; font-weight:bold;">Choose Adventure Category:</label>
                     <select id="game-category-input">
                         <option value="Math">🔢 Math Reef</option>
                         <option value="Science">🧪 Science Volcano</option>
@@ -321,12 +243,47 @@
                     </select>
                 </div>
 
-                <!-- FIXED: Calls startAdventure() exactly as written in script -->
-                <button class="btn" onclick="startAdventure()">Set Sail! ⛵</button>
+                <button class="btn" onclick="launchGame()">Set Sail! ⛵</button>
             </div>
         </div>
 
-        <!-- PAGE 2: ABOUT PAGE -->
+        <!-- 2. GAME INSTRUCTIONS SCREEN -->
         <div id="about-page" class="page">
             <h3>How the Game Works</h3>
-            <p style="margin-top:10px; line-height: 1.5; font-size: 1rem;">
+            <p style="margin-top:8px; line-height: 1.4; font-size: 0.95rem;">
+                Enter your identity tags and select a study sector path. Complete quiz questions at each checkpoint marker node to sail closer to the legendary Crown Chest box. Answers trigger coin points, level badges, and high score ranks.
+            </p>
+            <button class="btn" onclick="changeScreen('home-page')">Back to Home</button>
+        </div>
+
+        <!-- 3. LIVE TRIVIA SEA MAP GAMEPLAY SCREEN -->
+        <div id="gameplay-page" class="page">
+            <h3>Island Travel Map</h3>
+            <div class="map-visualization">
+                <div id="node-1" class="island-node active">🏝️1</div>
+                <div id="node-2" class="island-node">🏝️2</div>
+                <div id="node-3" class="island-node">🏝️3</div>
+                <div id="node-chest" class="island-node">👑</div>
+            </div>
+
+            <div class="quiz-box">
+                <h4 id="question-text">Loading Question Text...</h4>
+                <div id="options-box" class="options-grid"></div>
+            </div>
+            <div id="status-msg" style="margin-top: 12px; font-weight: bold; text-align: center; min-height: 20px;"></div>
+        </div>
+
+        <!-- 4. FINAL VICTORY & LEADERBOARD SCREEN -->
+        <div id="victory-page" class="page">
+            <div class="center-content">
+                <h2>🎉 Treasure Chest Unlocked! 🎉</h2>
+                <p>Splendid job! You navigated the stormy seas perfectly.</p>
+                
+                <div class="certificate-box">
+                    <h2 style="color: var(--pirate-red); font-size: 1.4rem; margin-bottom: 8px;">CERTIFICATE OF TRIUMPH</h2>
+                    <p>Awarded to brave explorer</p>
+                    <h3 id="cert-user" style="margin: 10px 0; text-decoration: underline; color: var(--dark-wood);">Pirate Name</h3>
+                    <p>for clearing the dangerous <strong id="cert-topic">Subject</strong> path</p>
+                    <p>with a reward vault of <strong id="cert-loot">0</strong> Gold Coins!</p>
+                </div>
+
